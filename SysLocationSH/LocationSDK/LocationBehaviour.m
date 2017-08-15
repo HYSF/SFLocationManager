@@ -13,6 +13,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import <UIKit/UIKit.h>
 #import "CLLocation+Sino.h"
+#import "AppDelegate.h"
 
 @interface LocationBehaviour ()<CLLocationManagerDelegate>
 {
@@ -117,8 +118,18 @@ DEF_SINGLETON
     }];
     [alertView addAction:alerSetting];
     [alertView addAction:alerCancel];
+    
+    [self performSelector:@selector(showAlert:) withObject:alertView afterDelay:0.f];
+    
     isShowAlert = YES;
-    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertView animated:YES completion:nil];
+    
+}
+
+- (void)showAlert:(id)object
+{
+    UIAlertController *alertView = (UIAlertController *)object;
+    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [delegate.window.rootViewController presentViewController:alertView animated:YES completion:nil];
 }
 
 - (void)openLocationSetting
@@ -137,6 +148,7 @@ DEF_SINGLETON
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc]init];
         _locationManager.delegate = self;
+        
     }
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         //使用期间
